@@ -47,3 +47,4 @@ resource "azurerm_monitor_activity_log_alert" "main" {
 
 # webhook auf email_receiver
 # from criteria -> category "ServiceHealth" -> dann unterblock machen mit services, usw. from Azure (Beispiel from Tassilo (Health Alerts -> Properties -> JSON view))
+# Azure Provider block, damit validation durchläuft
