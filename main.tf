@@ -1,24 +1,18 @@
-resource "azurerm_resource_group" "this" {
-  name     = var.name
-  location = var.location
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"
+  location = "West Europe"
 }
-
- 
 
 resource "azurerm_monitor_action_group" "main" {
   name                = "example-actiongroup"
-  resource_group_name = var.resource_group_name
-  short_name          = var.short_name
-
- 
+  resource_group_name = azurerm_resource_group.example.name
+  short_name          = "p0action"
 
   webhook_receiver {
     name        = "callmyapi"
     service_uri = "http://example.com/alert"
   }
 }
-
- 
 
 resource "azurerm_storage_account" "to_monitor" {
   name                     = "examplesa"
@@ -28,15 +22,11 @@ resource "azurerm_storage_account" "to_monitor" {
   account_replication_type = "GRS"
 }
 
- 
-
 resource "azurerm_monitor_activity_log_alert" "main" {
   name                = "example-activitylogalert"
   resource_group_name = azurerm_resource_group.example.name
   scopes              = [azurerm_resource_group.example.id]
   description         = "This alert will monitor a specific storage account updates."
-
- 
 
   criteria {
     resource_id    = azurerm_storage_account.to_monitor.id
@@ -44,12 +34,8 @@ resource "azurerm_monitor_activity_log_alert" "main" {
     category       = "Recommendation"
   }
 
- 
-
   action {
     action_group_id = azurerm_monitor_action_group.main.id
-
- 
 
     webhook_properties = {
       from = "terraform"
